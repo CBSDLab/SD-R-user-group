@@ -9,6 +9,12 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
+
+
+# Learning objectives
+
+
 # Accessing the High Performance Computing (HPC) cluster
 
 The easiest way to get started with the HPC is to go to the OnDemand web portal, where you can develop and test code interactively using RStudio server and submit/manage batch jobs that require more computationally intensive resources in terms of memory and cores. 
@@ -18,7 +24,52 @@ You can access the the OnDemand web portal by going to https://ondemand.case.edu
 To check this, change your directory to /home/psh39/Stella_Simulator, and you should see the following files:
 
 ![Stella_Simulator directory contents](Figures/Figure1.png){width=100%}
+# Stella Simulator
+
+isee Systems Stella Simulator is a "headless" version of Stella Architect without the graphical user interface and runs on the CWRU HPC cluster under the Linux operating system. Stella Simulator runs considerably faster than Stella Architect since it does not have to manage the visualization of output and can support up to 20 parallel simulations for each license. Stella Simulator runs any valid Stella model, sensitivity analysis and optimization. And, Stella Simulator (from version 2.1.3+) exports the loop score analysis for each run.
+
+Stella Simulator is run through the terminal or system command, which in R is the `system2()` command. To check access to being able to run Stella Simulator and see the latest options, run the following code in RStudio: 
+
+```{r Checking stella simulator and seeing the options}
+system2("/home/psh39/Stella_Simulator/stella_simulator")
+```
+
 # Running a simulation
+
+Stella simulations run in the folder of the model where all paths to are relative to the directory of the model. So, for example, if you run the SIR.stmx model in your home directory in Stella Architect and save the results, you'll see that Stella Architect created the SIR.isdb file in the same directory. 
+
+Stella Simulator *does not* create a .isdb file for the simulation run, so you will need to set up the model in Stella Architect with a file for exporting the data from each run. And, typically, you'll also want to set up a file for sending the parameter values and initial conditions for importing data into a model before each run. The paths for these files are also relative to the path of the model. 
+
+Since Stella Simulator can simulate multiple models in parallel, conflicts can arise if the models and import/export files are all in the same directory. The easiest and safest way to manage this is to set up a separate folder for each simulation, copy the model to that folder along with import/export files, and then run the model in that folder. 
+
+To make this easier and more generalizable, we'll set variables that we can use to reference the paths for Stella Simulator and our simulation runs. 
+
+First, set the path to Stella Simulator:
+
+```{r Set path to Stella Simulator}
+stella_path <- "/home/psh39/Stella_Simulator/stella_simulator"
+```
+
+Next, create the directory to copy the model and import/export files to:
+
+```{r Create a director in your home directory}
+run_path <- "SDRUG_EX1_tmp"
+dir.create(run_path)
+```
+
+Once we've set up the paths and directories, copy the files associated with a model into the `run_path` folder. We're just running one simulation in a single thread, so there are many ways to do this, but to take full advantage of the HPC and Stella Simulator, we'll want to write programs that can run multiple models in parallel. Hence, we need an efficient way to copy a set of files associated wtih a model to one or more folders for each run. The R `unzip()` function does this nicely. 
+
+```{r Unzipping the files to the directory of the simulation run}
+zipped_model <- "/home/psh39/Desktop/Projects/SD_R_Users_Group/Exercise_01/SIRmodel.zip"
+unzip(zipped_model, exdir=run_path)
+```
+
+Finally, we'll call the `system2()` function and run the model:
+
+```{r Running the limits to growth model}
+system2(stella_path,
+        args=paste0(" ",run_path,"/SIR.stmx"," -r"))
+```
 
 
 
