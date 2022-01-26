@@ -9,22 +9,17 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+There are a variety of ways to exchange and maintain RStudio project files on the HPC between your directory on the HPC, local computer, and project repository (e.g., on Box, Dropbox, Google Drive, GitHub). Among these, GitHub is a platform that has been specifically designed and used to support opensource software development project. GitHub is a distributed versioning system including an online database of projects (https://github.com/), desktop and command line or terminal tools. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+GitHub stores projects and versions of work in respository. A repository is an collection that can have multiple folders and files, multiple projects associated with a collection, and releases. GitHub supports cloning a respository (making a copy that synchronized with)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Instructions
 
-```{r cars}
-summary(cars)
-```
+Step 1. In RStudio on the HPC through OnDemand, create folder where you want to store the cloned directory and set that as your current working directory. 
 
-## Including Plots
+Step 2. in Rstudio Terminal, clone the respository SD R User Group repository using the following command, `git clone https://github.com/CBSDLab/SD-R-user-group.git`. 
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
