@@ -2,7 +2,9 @@
 title: "Exercise 01-Getting Started on the HPC"
 author: "Peter S. Hovmand"
 date: "1/11/2022"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -31,7 +33,7 @@ isee Systems Stella Simulator is a "headless" version of Stella Architect withou
 Stella Simulator is run through the terminal or system command, which in R is the `system2()` command. To check access to being able to run Stella Simulator and see the latest options, run the following code in RStudio: 
 
 ```{r Checking stella simulator and seeing the options}
-system2("/home/psh39/Stella_Simulator/stella_simulator")
+system2("/home/psh39/Stella_Simulator/stella_simulator", stderr = TRUE)
 ```
 
 # Running a simulation
@@ -66,11 +68,34 @@ unzip(zipped_model, exdir=run_path)
 
 Finally, we'll call the `system2()` function and run the model:
 
-```{r Running the limits to growth model}
+```{r Running the limits to growth model, message=TRUE}
 system2(stella_path,
-        args=paste0(" ",run_path,"/SIR.stmx"," -r"))
+        args=paste0(" ",run_path,"/SIR.stmx"," -r"), stdout = TRUE)
 ```
 
+# Changing parameters and initial values
+
+Setting and changing the parameters and initial values in R is done by creating a named list and saving the list to the .csv file that the model is looking for as an input file: 
+
+```{r Changing parameters and initial values}
+parms<-c(Contact_Rate=50, Infectivity=0.1)
+write.csv(parms,file=paste0(run_path,"/Parms.csv"))
+```
+
+# Importing and plotting results 
+
+To import the data from the simulation run into R and plot the data, read the Stella export file which has been set up: 
+
+```{r Reading data}
+results <- read.csv("results.csv")
+head(results)
+```
+
+Results can then be plotted using R plotting functions. 
+
+```{r Plotting simulation run}
+plot(Infected~months, data=results, type="l")
+```
 
 
 
