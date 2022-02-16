@@ -1,0 +1,79 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Running Stella Models from R {#command-line}
+
+Stella models can be run from the terminal or command line from R. While this involves passing initial conditions and parameters and returning results through files, and hence slower than a function call, there are some advantages to running models in Stella. First, if the model was origianlly developed in Stella while the anlaysis is conducted using a model translated into R or compiled C, questions might arise about the comparability of the results. It is therefore not uncommon in the statistical sciences to replicate and compare analsyes across different software packages. Running models within Stella and direclty comparing the results with models run in R provides a mean to assess to what extent artificats of specific implementations of numerical algorithms might impact the results. 
+
+## Exchanging Values Between R and Stella
+
+When running models through a command line or terminal, one needs a way to pass model parameters and initial conditions to a model, and then getting the results of a simulation. Stella supports a number of different means for exchanging values, from using external files for importing and exporting data to files for handshaking and directly reading the results from a SQLite database format. 
+
+The efficiency of the approach will vary by the application. For example, for a relatively small set of simulations, sending parameters, calling Stella to run the model, starting Stella and running the model, saving the results and loading them into the R program will happen relatively quickly. However, for larger runs, the overhead of exchanging data will become noticable when compared to running models directly within Stella or as compiled models as shown in Chapter \@(run-complied). 
+
+The easiest approach to exchanging values between R and Stella is to use dedicated .csv files for importing values and exporting simulation results. Although these can be set up using Excel, the proceedure is combersome. An easier way in R is to set up these files directly by creating the .csv files using the `write.csv()` function. To do this, we will need to first create the files from R, and then create the dynamic links for importing and exporting data in Stella to/from these files. 
+
+## Setting up Dynamic Links with Stella
+
+Dymamic links in Stella are set up as static links to the import and export files. This means that one will need to fix the links on the local machine. The easiest way to set up the links is to create the .csv files for importing and exporting data in R. Once these files have been created, one can create the dynamic links within Stella. 
+
+The dynamic links for importing data into Stella look for either horizontally or vertically oriented tables of values, and use the supplied variable names and their values for the values within the model. Hence, one only needs to specify the values of the variables that one wants to change. 
+
+This can most easily be done by assigning the values to the variables as a named list, and then saving the list to a .csv file that is then dynamically linked and read at the start of each simulation by Stella. For example, if we want to set the paramters of the SIR model for the contact rate to 50 and infectivity to 0.1, we can do this by creating and then saving a named list as shown below.^[Note that Stella uses underscores for spaces in variable names.] Once this file has been created, a dynamic link can be created in Stella by setting up an import data link to the file. 
+
+```{r}
+parms<-c(Contact_Rate=50, Infectivity=0.1)
+write.csv(parms,file="Parms.csv")
+```
+
+To create a file that can serve as a target for saving the results from a simulation, simply create a .csv file that has no data, and then set up a dynamic link to this file in Stella. 
+
+```{r}
+write.csv(NULL, file="Results.csv")
+```
+
+## Running a Simulation from the Command Line
+
+Stella models can be run from the terminal or command line. In RStudio, one can open up a new terminal in the working director by going to the main menu and clicking Tools | Terminal | New Terminal. One can also open and send commands to the terminal or command line by using the `system()`. The specific command will depend on the operating system, path in the environment variable, and version of Stella, but all should work with the following set of command line options in table below.
+
+Option  | Description
+------- | ------------------------------------------------
+-r      | Run the model "ballistically" (as quickly as possible, with the simulation speed set to 0) and then quit without saving.
+-rn N | Run the model "ballistically" N times and then quit without saving. (N > 0)
+-rs | Run sensitivity analysis as defined in the model and then quit without saving.
+-rd | Restore all devices after opening the model (before the first run).
+-s | Save the model at the end of the last run.
+-i  | Import now before each run
+-x  | Export now after each run
+-nq	| Do not quit after the last run.
+-0 arg  | Set specified variable to 0 before first run
+-1 arg  | Set specified variable to 1 before first run
+-q      | Quiet mode (only errors are output)
+
+ISEE Stella Professional, Architect, and iThink all suppot command line excution of models with command line options, but will open the graphical user interface, run the model, and then either remain open or exit depending on the command line options. ISEE Stella Simulator ^[Stella Simulator is a separate license available from ISEE Systems.] will essentially do the same, except it does not open the graphical user interface (a "headless" version of Stella), and hence faster. Additionally, one can distribute simulations across multiple cores. 
+
+The exact command line call will depend on the operating system and which version of Stella is being used. For MacOS using Stella, the following command will run the SIR model (set with the "SIR.stmx") by opening a shell, waiting for the results (-W option) before returning to R, starting the Stella Architect application (-a option) using the imported parameters (-i option) before simulation, and saving the results (-s option) before exiting. 
+
+```{r Stella Architect run}
+system('open -W -a "Stella Architect.app" "SIR.stmx" --args -r -i -x')
+```
+
+```{r Stella Simulator run}
+system('/Applications/Stella_Simulator/stella_simulator "SIR.stmx" ')
+```
+
+Once a simulation run has been completed, control returns to R and the results can be imported into R for further analysis and summaries using the `read.csv()` function:
+
+```{r Reading data}
+results <- read.csv("results.csv")
+head(results)
+```
+
+Results can then be plotted using R plotting functions. 
+
+```{r Plotting}
+plot(Infected~months, data=results, type="l")
+```
+
