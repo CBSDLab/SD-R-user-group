@@ -1,4 +1,4 @@
-# Replication Study
+# Replication Studies
 
 Replication is a hallmark of science, and a replication study is one where the primary goal is to replicate the results from a previous study. This exercise provides the R Markdown file, Stella simulation model, and associated files for replicating the simulation results in the Clinical Child and Family Psychology Review paper "System Dynamics of Cognitive Vulnerabilities and Family Support Among Latina Children and Adolescents". 
 
