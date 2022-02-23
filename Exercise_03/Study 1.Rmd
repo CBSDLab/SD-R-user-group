@@ -35,26 +35,28 @@ require(reshape2) # needed to reshape data for plotting with ggplot2
 Additionally the path for Stella Simulator needs to be set:
 
 ```{r Set path to Stella Simulator}
-stella_path <- "/home/psh39/Stella_Simulator/stella_simulator"
-
-# Local path, not run on HPC
+# Local path, not run on HPC. If running this on a local machine, this should
+# be modified to reflect the path of the Stella_Simulator on the local 
+# machine, commentated
 # stella_path <- "PATH=$PATH:/Applications/Stella_Simulator"
+
+# Path used for running on CWRU HPC
+stella_path <- "/home/psh39/Stella_Simulator/stella_simulator"
 ```
 
 Next, create the directory to copy the model and import/export files to:
 
 ```{r Create a director in your home directory}
-run_path <- "SDRUG_EX1_tmp"
+run_path <- "Exercise_03"
 dir.create(run_path)
 ```
 
-
+Unzip the study file into the directory just created:
 
 ```{r Unzipping the files to the directory of the simulation run}
 zipped_model <- "/home/psh39/Desktop/Projects/SD_R_Users_Group/Exercise_03/CCFP-Study-1.zip"
 unzip(zipped_model, exdir=run_path)
 ```
-
 
 ## Setting up individual cases
 
