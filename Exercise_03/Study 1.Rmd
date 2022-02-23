@@ -72,16 +72,14 @@ for (i in cases.vec) {
             select(!Case)          # drop the Case column
   
   # write the parameters to the Stella import file
-  write_csv(parms, file="Parms.csv")
+  write.csv(parms, "Parms.csv")
   
   # run the simulation 
-  system2("stella_simulator",
-        args = "-r Developmental-Transitions-2-2-9.stmx",
-        env = stella_path, 
-        wait=TRUE)
+  system2(stella_path,
+        args=paste0(" ","Developmental-Transitions-2-2-10.stmx"," -r"), 
+        stdout = TRUE, wait=TRUE)
   
   # read the results and add them to the data frame
-  
   results.baseruns<-rbind(results.baseruns, 
                           tibble(Case=i,read_csv("Results.csv")))
   
