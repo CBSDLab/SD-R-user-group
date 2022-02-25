@@ -4,10 +4,6 @@ One of the main reasons to develop a system dynamics simulation model is being a
 
 This exercise uses the Systems Change fOr Racial Equity (SCORE) system dynamics simulation model version 1-5 developed in Stella Architect as part of teh Cross Sector Innovations Initiative (CSII) project (Heidi Gullet, PI).
 
-# Policy Analysis
-
-# Sensitivity Analysis
-
 # Acknowledgements
 
 Initial development of the Systems Change fOr Racial Equity (SCORE) system dynamics simulation model was supported by the Cross Sector Innovations Initiative (CSII) project (Heidi Gullet, PI). 
