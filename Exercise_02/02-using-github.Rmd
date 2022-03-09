@@ -13,7 +13,11 @@ There are a variety of ways to exchange and maintain RStudio project files on th
 
 GitHub stores projects and versions of work in respository. A repository is an collection that can have multiple folders and files, multiple projects associated with a collection, and releases. GitHub supports cloning a respository (making a copy that synchronized with)
 
-# Instructions
+# Introduction to Git
+
+
+
+# Cloning GitHub repository
 
 Step 1. In RStudio on the HPC through OnDemand, create folder where you want to store the cloned directory and set that as your current working directory. 
 
